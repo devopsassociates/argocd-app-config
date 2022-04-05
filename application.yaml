@@ -1,0 +1,24 @@
+apiVersion: argoproject.io/v1alpha
+kind: Application
+metadata:
+  name: myapp-argo-application
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL:https://github.com/devopsassociates/argocd-app-config
+    targetRevision: HEAD
+    path: dev
+  destination:
+    server: https://kubernetes.default.svc # This connects to the default local kubernetes api from within k8s. One can also specify remote clusters
+    namespace: myapp
+
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+
+  automated: #uses a 3min interval to check the repo
+    selfHeal: true
+    prune: true
+
